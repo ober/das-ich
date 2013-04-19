@@ -1,11 +1,11 @@
-;;; dasich.el --- Run Go-lang code in Elisp.
+;;; das-ich.el --- Run Go-lang code in Elisp.
 
 ;;; -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2013  Jaime Fournier <jaimef@linbsd.org>
 
 ;; Author: Jaime Fournier <jaimef@linbsd.org>
-;; Keywords: Thinatra
+;; Keywords: Go-lang Go
 ;; Version: 0.1
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -24,13 +24,46 @@
 ;;; Commentary:
 ;;
 ;; Why?
-;; The question is How. The question is ALWAYS how. -Mitnick
+;; The question is How. The question is ALWAYS how. -"Kevin Mitnick, TakeDown"
 
 
 ;;; Code:
 
 ;; Example Functions that handle calls to rest endpoints can be found in examples.el
-(defun go-run
-  (message "Am in gorun!")
+(defun go-run (code args)
+  (let ((tmpfile (format "/tmp/gr.%s.%s.go" (random 1000) (random 1000))))
+    (with-temp-file tmpfile (insert code))
+    (start-process
+     "gorun"
+     "gorun"
+     "go"
+     "run"
+     (format "%s" tmpfile)
+     (format "%s" args))))
 
-  )
+(setq codey "
+package main
+
+import (
+\"fmt\"
+)
+
+func fibonacci(n int) int {
+     var result int
+     if n < 2 {
+       result = 1
+     } else {
+      result = fibonacci(n-2) + fibonacci(n-1)
+     }
+     return result
+}
+
+func main() {
+    fmt.Println(\"Fib: \", fibonacci(4000))
+}
+")
+
+
+(go-run codey "")
+
+(provide 'dasich)
