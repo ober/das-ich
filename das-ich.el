@@ -32,6 +32,7 @@
 ;; Example Functions that handle calls to rest endpoints can be found in examples.el
 (defun go-run (code args)
   (let ((tmpfile (format "/tmp/gr.%s.%s.go" (random 1000) (random 1000))))
+    (message "XXX: tmpfile: %s" tmpfile)
     (with-temp-file tmpfile (insert code))
     (start-process
      "gorun"
@@ -61,9 +62,7 @@ func fibonacci(n int) int {
 func main() {
     fmt.Println(\"Fib: \", fibonacci(4000))
 }
-")
-
-
-(go-run codey "")
-
-(provide 'dasich)
+"
+      )
+(go-run codey "30")
+(provide 'das-ich)
